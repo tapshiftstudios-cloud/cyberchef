@@ -14,7 +14,10 @@ abstract final class NeonDecorations {
     return BoxDecoration(
       color: AppColors.surface,
       borderRadius: BorderRadius.circular(radius),
-      border: Border.all(color: AppColors.border, width: 1),
+      border: Border.all(
+        color: accent ?? AppColors.border,
+        width: accent != null ? 1.5 : 1,
+      ),
       boxShadow: [
         BoxShadow(
           color: Colors.black.withValues(

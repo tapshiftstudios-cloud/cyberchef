@@ -27,7 +27,10 @@ class NeonCameraFrame extends StatelessWidget {
         constraints: BoxConstraints(maxWidth: maxPreviewWidth),
         child: Container(
           width: double.infinity,
-          decoration: NeonDecorations.card(radius: NeonDecorations.cardRadius),
+          decoration: NeonDecorations.card(
+            radius: NeonDecorations.cardRadius,
+            accent: accent,
+          ),
           clipBehavior: Clip.antiAlias,
           child: AspectRatio(
             aspectRatio: previewAspectRatio,

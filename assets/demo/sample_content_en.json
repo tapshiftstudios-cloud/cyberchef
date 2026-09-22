@@ -1,0 +1,62 @@
+{
+  "locale": "en",
+  "pantry_items": [
+    {"name": "Tomato", "category": "Produce", "expires_in_days": 1},
+    {"name": "Basil", "category": "Produce", "expires_in_days": 0},
+    {"name": "Chicken breast", "category": "Meat", "expires_in_days": 2},
+    {"name": "Milk", "category": "Dairy", "expires_in_days": 3},
+    {"name": "Spinach", "category": "Produce", "expires_in_days": 4},
+    {"name": "Eggs", "category": "Dairy", "expires_in_days": 8},
+    {"name": "Greek yogurt", "category": "Dairy", "expires_in_days": 6},
+    {"name": "Parmesan", "category": "Dairy", "expires_in_days": 12}
+  ],
+  "shopping_list": [
+    "Olive oil",
+    "Pasta",
+    "Garlic",
+    "Onion (done)",
+    "Canned tomatoes (done)"
+  ],
+  "recipes": [
+    {
+      "title": "Tomato Basil Pasta",
+      "cookTime": "15 min",
+      "difficulty": "Easy",
+      "instructions": [
+        "Boil pasta in salted water until al dente.",
+        "Sauté garlic in olive oil, add chopped tomatoes and basil.",
+        "Toss pasta with the sauce and finish with parmesan."
+      ]
+    },
+    {
+      "title": "Shakshuka with Eggs",
+      "cookTime": "25 min",
+      "difficulty": "Medium",
+      "instructions": [
+        "Simmer crushed tomatoes with onion, pepper, and spices.",
+        "Make wells in the sauce and crack eggs into each well.",
+        "Cover and cook until whites set; serve with bread."
+      ]
+    },
+    {
+      "title": "Chicken Veggie Stir Fry",
+      "cookTime": "20 min",
+      "difficulty": "Easy",
+      "instructions": [
+        "Slice chicken and vegetables into bite-size pieces.",
+        "Stir-fry chicken until golden, then add vegetables.",
+        "Finish with soy sauce, garlic, and sesame oil."
+      ]
+    },
+    {
+      "title": "Spinach & Feta Omelette",
+      "cookTime": "10 min",
+      "difficulty": "Easy",
+      "instructions": [
+        "Whisk eggs with salt and pepper.",
+        "Cook spinach briefly, add eggs, and fold in feta.",
+        "Serve immediately with toast."
+      ]
+    }
+  ]
+}

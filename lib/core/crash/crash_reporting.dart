@@ -25,6 +25,7 @@ abstract final class CrashReporting {
   }) {
     options.dsn = dsn;
     options.tracesSampleRate = 0;
+    // ignore: experimental_member_use
     options.profilesSampleRate = 0;
     options.attachScreenshot = false;
     options.environment = kReleaseMode ? 'production' : 'development';

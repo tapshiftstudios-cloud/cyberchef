@@ -12,7 +12,6 @@ import '../../../core/l10n/app_strings.dart';
 import '../../../core/navigation/app_navigator.dart';
 import '../../../core/presentation/ai_flow_guard.dart';
 import '../../../core/presentation/app_feedback.dart';
-import '../../../core/providers/recipe_localization_provider.dart';
 import '../../../core/providers/service_providers.dart';
 import '../../../core/providers/user_preferences_provider.dart';
 import '../../pantry/data/pantry_repository.dart';

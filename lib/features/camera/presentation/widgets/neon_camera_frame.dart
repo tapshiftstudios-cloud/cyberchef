@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/neon_decorations.dart';
 
 /// Camera preview container with bento-style frame.

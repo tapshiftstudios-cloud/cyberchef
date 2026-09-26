@@ -11,14 +11,18 @@ class RecipeVisual extends StatefulWidget {
   const RecipeVisual({
     super.key,
     required this.title,
+    this.imageSearchTitle,
     this.imageUrl,
+    this.ingredients = const [],
     this.height = 148,
     this.radius = 14,
     this.compact = false,
   });
 
   final String title;
+  final String? imageSearchTitle;
   final String? imageUrl;
+  final List<String> ingredients;
   final double height;
   final double radius;
   final bool compact;
@@ -29,6 +33,7 @@ class RecipeVisual extends StatefulWidget {
 
 class _RecipeVisualState extends State<RecipeVisual> {
   late Future<String> _imageFuture;
+  var _photoVisible = false;
 
   @override
   void initState() {
@@ -40,15 +45,19 @@ class _RecipeVisualState extends State<RecipeVisual> {
   void didUpdateWidget(covariant RecipeVisual oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.title != widget.title ||
-        oldWidget.imageUrl != widget.imageUrl) {
+        oldWidget.imageSearchTitle != widget.imageSearchTitle ||
+        oldWidget.imageUrl != widget.imageUrl ||
+        oldWidget.ingredients != widget.ingredients) {
       _loadImage();
     }
   }
 
   void _loadImage() {
+    setState(() => _photoVisible = false);
     _imageFuture = RecipeImageService.instance.resolveUrl(
-      widget.title,
+      widget.imageSearchTitle ?? widget.title,
       explicitUrl: widget.imageUrl,
+      ingredients: widget.ingredients,
     );
   }
 
@@ -70,8 +79,9 @@ class _RecipeVisualState extends State<RecipeVisual> {
         child: FutureBuilder<String>(
           future: _imageFuture,
           builder: (context, snapshot) {
+            final searchTitle = widget.imageSearchTitle ?? widget.title;
             final imageUrl = snapshot.data ??
-                RecipeImageFallback.urlForTitle(widget.title);
+                RecipeImageFallback.urlForTitle(searchTitle);
             return Stack(
               children: [
                 Positioned.fill(
@@ -79,10 +89,24 @@ class _RecipeVisualState extends State<RecipeVisual> {
                     imageUrl,
                     fit: BoxFit.cover,
                     loadingBuilder: (context, child, progress) {
-                      if (progress == null) return child;
+                      if (progress == null) {
+                        if (!_photoVisible) {
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            if (mounted) setState(() => _photoVisible = true);
+                          });
+                        }
+                        return child;
+                      }
                       return const SizedBox.shrink();
                     },
-                    errorBuilder: (_, __, ___) => const SizedBox.shrink(),
+                    errorBuilder: (_, __, ___) {
+                      if (_photoVisible) {
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          if (mounted) setState(() => _photoVisible = false);
+                        });
+                      }
+                      return const SizedBox.shrink();
+                    },
                   ),
                 ),
                 Positioned.fill(
@@ -130,12 +154,13 @@ class _RecipeVisualState extends State<RecipeVisual> {
                     ),
                   ),
                 ),
-                Center(
-                  child: Text(
-                    style.emoji,
-                    style: TextStyle(fontSize: widget.compact ? 38 : 48),
+                if (!_photoVisible)
+                  Center(
+                    child: Text(
+                      style.emoji,
+                      style: TextStyle(fontSize: widget.compact ? 38 : 48),
+                    ),
                   ),
-                ),
                 Positioned(
                   left: 14,
                   right: 14,

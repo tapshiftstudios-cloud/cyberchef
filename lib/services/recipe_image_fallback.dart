@@ -17,6 +17,15 @@ abstract final class RecipeImageFallback {
     if (_any(t, const ['rice', 'pilav', 'bowl'])) {
       return 'https://images.unsplash.com/photo-1512058564366-18510be2db19?auto=format&fit=crop&w=800&q=75';
     }
+    if (_any(t, const ['karnabahar', 'cauliflower', 'mücver', 'mucver'])) {
+      return 'https://images.unsplash.com/photo-1584270354949-c26b0d66b80d?auto=format&fit=crop&w=800&q=75';
+    }
+    if (_any(t, const ['pırasa', 'pirasa', 'leek'])) {
+      return 'https://images.unsplash.com/photo-1518977954372-dbb0712bfcb0?auto=format&fit=crop&w=800&q=75';
+    }
+    if (_any(t, const ['sütlaç', 'sutlac', 'pudding'])) {
+      return 'https://images.unsplash.com/photo-1570197788417-0e82375a93ae?auto=format&fit=crop&w=800&q=75';
+    }
     if (_any(t, const ['dessert', 'cake', 'tatli', 'tatlı'])) {
       return 'https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&w=800&q=75';
     }

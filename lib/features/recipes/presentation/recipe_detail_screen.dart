@@ -113,6 +113,7 @@ class RecipeDetailScreen extends ConsumerWidget {
                       const SizedBox(height: 14),
                       RecipeVisual(
                         title: localized.title,
+                        imageSearchTitle: localized.effectiveImageSearchTitle,
                         imageUrl: localized.imageUrl,
                         height: 164,
                       ),

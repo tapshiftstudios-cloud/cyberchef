@@ -20,6 +20,7 @@ class RecipeCard extends ConsumerWidget {
     this.favoriteModeLabel,
     this.compactVisual = false,
     this.recipeCacheId,
+    this.pantryIngredients = const [],
   });
 
   final Recipe recipe;
@@ -29,6 +30,7 @@ class RecipeCard extends ConsumerWidget {
   final String? favoriteModeLabel;
   final bool compactVisual;
   final String? recipeCacheId;
+  final List<String> pantryIngredients;
 
   LocalizedRecipeKey get _displayKey =>
       (recipe: recipe, cacheId: recipeCacheId);
@@ -117,7 +119,9 @@ class RecipeCard extends ConsumerWidget {
                   const SizedBox(height: 12),
                   RecipeVisual(
                     title: title,
+                    imageSearchTitle: display.effectiveImageSearchTitle,
                     imageUrl: recipe.imageUrl,
+                    ingredients: pantryIngredients,
                     height: compactVisual ? 112 : 136,
                     compact: compactVisual,
                   ),

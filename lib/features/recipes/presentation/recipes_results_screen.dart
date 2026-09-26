@@ -167,6 +167,7 @@ class _ResultsBody extends ConsumerWidget {
                       index: entry.key,
                       accent: mode.accentColor,
                       favoriteModeLabel: mode.label,
+                      pantryIngredients: result.effectiveImageSearchIngredients,
                       onTap: () {
                         AppNavigator.pushRecipeDetail(
                           context,

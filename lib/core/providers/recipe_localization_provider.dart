@@ -139,7 +139,7 @@ class RecipeLocalizationNotifier extends Notifier<RecipeLocalizationState> {
     if (ready != null) return ready;
 
     final translated = await _translatePantry(source, locale);
-    final result = translated ?? source;
+    final result = _preservePantrySearchProvenance(source, translated ?? source);
     _putPantry(_pantryCacheKey(pantryId, locale), result);
     return result;
   }
@@ -154,8 +154,9 @@ class RecipeLocalizationNotifier extends Notifier<RecipeLocalizationState> {
 
     final translated = await _translateRecipe(source, locale);
     if (translated != null) {
-      _putRecipe(_recipeCacheKey(recipeId, locale), translated);
-      return translated;
+      final merged = _preserveRecipeSearchProvenance(source, translated);
+      _putRecipe(_recipeCacheKey(recipeId, locale), merged);
+      return merged;
     }
     if (!needsAiLocalization(source, locale)) return source;
     final fallback = _fallbackLocalizeRecipe(source, locale);
@@ -235,7 +236,7 @@ class RecipeLocalizationNotifier extends Notifier<RecipeLocalizationState> {
       if (ai.isConfigured) {
         final translated = await _translateRecipe(favorite.recipe, locale);
         if (translated != null) {
-          result = translated;
+          result = _preserveRecipeSearchProvenance(favorite.recipe, translated);
         } else if (needsAiLocalization(favorite.recipe, locale)) {
           result = _fallbackLocalizeRecipe(favorite.recipe, locale);
         }
@@ -269,7 +270,10 @@ class RecipeLocalizationNotifier extends Notifier<RecipeLocalizationState> {
           continue;
         }
         final translated = await _translatePantry(entry.value, locale);
-        _putPantry(key, translated ?? entry.value);
+        _putPantry(
+          key,
+          _preservePantrySearchProvenance(entry.value, translated ?? entry.value),
+        );
       }
     } finally {
       _pantryWarmupRunning = false;
@@ -338,15 +342,52 @@ class RecipeLocalizationNotifier extends Notifier<RecipeLocalizationState> {
   }
 
   Recipe _fallbackLocalizeRecipe(Recipe recipe, AppLocale locale) {
+    return _preserveRecipeSearchProvenance(
+      recipe,
+      Recipe(
+        title: RecipeTextLocalizer.localize(recipe.title, locale),
+        cookTime: RecipeTextLocalizer.localize(recipe.cookTime, locale),
+        difficulty: RecipeTextLocalizer.localize(recipe.difficulty, locale),
+        instructions: recipe.instructions
+            .map((step) => RecipeTextLocalizer.localize(step, locale))
+            .toList(),
+        nutrition: recipe.nutrition,
+        imageUrl: recipe.imageUrl,
+      ),
+    );
+  }
+
+  static Recipe _preserveRecipeSearchProvenance(Recipe source, Recipe next) {
     return Recipe(
-      title: RecipeTextLocalizer.localize(recipe.title, locale),
-      cookTime: RecipeTextLocalizer.localize(recipe.cookTime, locale),
-      difficulty: RecipeTextLocalizer.localize(recipe.difficulty, locale),
-      instructions: recipe.instructions
-          .map((step) => RecipeTextLocalizer.localize(step, locale))
+      title: next.title,
+      cookTime: next.cookTime,
+      difficulty: next.difficulty,
+      instructions: next.instructions,
+      nutrition: next.nutrition,
+      imageUrl: next.imageUrl ?? source.imageUrl,
+      imageSearchTitle: source.effectiveImageSearchTitle,
+    );
+  }
+
+  static PantryAnalysisResult _preservePantrySearchProvenance(
+    PantryAnalysisResult source,
+    PantryAnalysisResult next,
+  ) {
+    final searchIngredients = source.effectiveImageSearchIngredients;
+    return PantryAnalysisResult(
+      ingredients: next.ingredients,
+      recipes: next.recipes
+          .asMap()
+          .entries
+          .map((entry) {
+            final src = entry.key < source.recipes.length
+                ? source.recipes[entry.key]
+                : null;
+            if (src == null) return entry.value;
+            return _preserveRecipeSearchProvenance(src, entry.value);
+          })
           .toList(),
-      nutrition: recipe.nutrition,
-      imageUrl: recipe.imageUrl,
+      imageSearchIngredients: searchIngredients,
     );
   }
 

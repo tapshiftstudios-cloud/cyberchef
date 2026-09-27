@@ -15,6 +15,7 @@ import '../../../core/theme/neon_decorations.dart';
 import '../domain/models/recipe_models.dart';
 import 'widgets/ingredient_chips.dart';
 import 'widgets/recipe_card.dart';
+import '../../../core/widgets/responsive_recipe_list.dart';
 import '../../../core/widgets/responsive_shell.dart';
 
 class RecipesResultsScreen extends ConsumerWidget {
@@ -161,23 +162,27 @@ class _ResultsBody extends ConsumerWidget {
                 ),
               ),
               const SizedBox(height: 16),
-              ...result.recipes.asMap().entries.map(
-                    (entry) => RecipeCard(
-                      recipe: entry.value,
-                      index: entry.key,
-                      accent: mode.accentColor,
-                      favoriteModeLabel: mode.label,
-                      pantryIngredients: result.effectiveImageSearchIngredients,
-                      onTap: () {
-                        AppNavigator.pushRecipeDetail(
-                          context,
-                          recipe: entry.value,
-                          index: entry.key,
-                          favoriteModeLabel: mode.label,
-                        );
-                      },
-                    ),
-                  ),
+              ResponsiveRecipeList(
+                itemCount: result.recipes.length,
+                itemBuilder: (context, index) {
+                  final recipe = result.recipes[index];
+                  return RecipeCard(
+                    recipe: recipe,
+                    index: index,
+                    accent: mode.accentColor,
+                    favoriteModeLabel: mode.label,
+                    pantryIngredients: result.effectiveImageSearchIngredients,
+                    onTap: () {
+                      AppNavigator.pushRecipeDetail(
+                        context,
+                        recipe: recipe,
+                        index: index,
+                        favoriteModeLabel: mode.label,
+                      );
+                    },
+                  );
+                },
+              ),
             ],
           ),
         ),

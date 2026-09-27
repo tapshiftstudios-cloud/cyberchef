@@ -1,24 +1,29 @@
 import 'package:flutter/material.dart';
 
-/// Keeps content at a phone-like width on desktop and tablet.
+import '../layout/app_breakpoints.dart';
+
+/// Centers content and grows max width on tablet / appliance displays.
 class ResponsiveShell extends StatelessWidget {
   const ResponsiveShell({
     super.key,
     required this.child,
-    this.maxWidth = 480,
+    this.maxWidth,
     this.padding = const EdgeInsets.symmetric(horizontal: 16),
   });
 
   final Widget child;
-  final double maxWidth;
+
+  /// When null, uses [AppBreakpoints.contentMaxWidth] for the current window.
+  final double? maxWidth;
   final EdgeInsetsGeometry padding;
 
   @override
   Widget build(BuildContext context) {
+    final limit = maxWidth ?? AppBreakpoints.of(context).contentMaxWidth;
     return Align(
       alignment: Alignment.topCenter,
       child: ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: maxWidth),
+        constraints: BoxConstraints(maxWidth: limit),
         child: Padding(
           padding: padding,
           child: child,

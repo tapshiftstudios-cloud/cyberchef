@@ -1,8 +1,11 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'core/config/app_env.dart';
+import 'core/layout/app_breakpoints.dart';
 import 'core/l10n/app_strings.dart';
 import 'core/storage/user_preferences_storage.dart';
 import 'core/theme/app_colors.dart';
@@ -12,9 +15,23 @@ import 'services/ad_service.dart';
 Future<void> bootstrap() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-  ]);
+  final view = PlatformDispatcher.instance.views.first;
+  final logicalSize = view.physicalSize / view.devicePixelRatio;
+  if (AppBreakpoints.allowAllOrientationsAtStartup(
+    logicalWidth: logicalSize.width,
+    logicalHeight: logicalSize.height,
+  )) {
+    await SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+      DeviceOrientation.landscapeLeft,
+      DeviceOrientation.landscapeRight,
+    ]);
+  } else {
+    await SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
+  }
 
   try {
     await dotenv.load(fileName: 'assets/config/cyberchef.env');

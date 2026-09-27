@@ -8,6 +8,7 @@ import '../../../core/providers/main_shell_tab_provider.dart';
 import '../../../core/widgets/empty_state_card.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/neon_decorations.dart';
+import '../../../core/widgets/responsive_recipe_list.dart';
 import '../../../core/widgets/responsive_shell.dart';
 import '../../recipes/presentation/widgets/recipe_card.dart';
 import 'providers/favorites_provider.dart';
@@ -42,9 +43,10 @@ class FavoritesScreen extends ConsumerWidget {
             children: [
               ResponsiveShell(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  children: items.asMap().entries.map((entry) {
-                    final favorite = entry.value;
+                child: ResponsiveRecipeList(
+                  itemCount: items.length,
+                  itemBuilder: (context, index) {
+                    final favorite = items[index];
                     return Dismissible(
                       key: ValueKey(favorite.id),
                       direction: DismissDirection.endToStart,
@@ -71,19 +73,19 @@ class FavoritesScreen extends ConsumerWidget {
                       child: RecipeCard(
                         recipe: favorite.recipe,
                         recipeCacheId: favorite.id,
-                        index: entry.key,
+                        index: index,
                         compactVisual: true,
                         onTap: () {
                           AppNavigator.pushRecipeDetail(
                             context,
                             recipe: favorite.recipe,
-                            index: entry.key,
+                            index: index,
                             favoriteModeLabel: favorite.modeLabel,
                           );
                         },
                       ),
                     );
-                  }).toList(),
+                  },
                 ),
               ),
             ],

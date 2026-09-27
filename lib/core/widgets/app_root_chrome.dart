@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../layout/app_breakpoints.dart';
 import '../providers/recipe_localization_provider.dart';
 import '../providers/user_preferences_provider.dart';
 import '../theme/app_colors.dart';
@@ -18,6 +19,19 @@ class AppRootChrome extends ConsumerWidget {
     final recipePrep = ref.watch(recipeLocalizationProvider);
     final palette = AppColors.palette;
 
+    final bp = AppBreakpoints.of(context);
+    final mq = MediaQuery.of(context);
+    final scaledChild = bp.displayTextScale == 1.0
+        ? child
+        : MediaQuery(
+            data: mq.copyWith(
+              textScaler: TextScaler.linear(
+                mq.textScaler.scale(1) * bp.displayTextScale,
+              ),
+            ),
+            child: child,
+          );
+
     return Stack(
       fit: StackFit.expand,
       children: [
@@ -28,7 +42,7 @@ class AppRootChrome extends ConsumerWidget {
             ),
           ),
         ),
-        child,
+        scaledChild,
         if (recipePrep.isPreparing)
           Positioned(
             top: 0,

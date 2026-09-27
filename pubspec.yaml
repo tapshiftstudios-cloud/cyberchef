@@ -1,7 +1,7 @@
 name: cyberchef
 description: Smart Pantry & AI Recipe Architect — identify fridge contents and generate AI recipes.
 publish_to: "none"
-version: 1.0.3+16
+version: 1.0.3+17
 
 environment:
   sdk: ">=3.2.0 <4.0.0"
